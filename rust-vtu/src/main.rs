@@ -3,10 +3,28 @@ pub mod plugins;
 use bevy::prelude::*;
 use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
-use crate::plugins::mesh_renderer::CustomMeshPlugin;
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen::prelude::*;
+
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn main_js() {
+    // redirect panic messages to the browser console
+    console_error_panic_hook::set_once();
+
+    // optionally redirect logs to the browser console
+    wasm_logger::init(wasm_logger::Config::default());
+
+    app();
+}
+
+// #[cfg(not(target_arch = "wasm32"))]
+fn main() {
+    app();
+}
 
 /// Main app entry point.
-fn main() {
+fn app() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
