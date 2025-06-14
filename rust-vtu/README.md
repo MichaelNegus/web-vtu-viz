@@ -4,7 +4,7 @@ Rust components for the visualiser app
 
 ## Pre-requisites 
 
-- Working Rust installation
+- Working Rust + Rustup installation
 - Run `rustup target add wasm32-unknown-unknown`
 - Run `cargo install wasm-bindgen-cli` 
 
