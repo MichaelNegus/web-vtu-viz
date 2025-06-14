@@ -11,5 +11,5 @@ export const WasmApp = () => {
     })()
   }, []);
 
-  return <div>WASM app here...</div>
+  return <canvas id="wasm-app" width="400" height="300"/>
 }

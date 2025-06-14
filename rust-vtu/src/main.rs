@@ -4,7 +4,7 @@ use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
-#[wasm_bindgen]
+#[wasm_bindgen(start)]
 pub fn main_js() {
     // redirect panic messages to the browser console
     console_error_panic_hook::set_once();
@@ -23,7 +23,13 @@ fn main() {
 /// Main app entry point.
 fn app() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                canvas: Some("#wasm-app".into()),
+                ..default()
+            }),
+            ..default()
+        }))
         .add_systems(Startup, setup)
         .add_plugins(PanOrbitCameraPlugin)
         .run();

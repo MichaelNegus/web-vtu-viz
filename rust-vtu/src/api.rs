@@ -2,6 +2,6 @@
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
-pub fn import_vtu_bytes(data: Vec<u8>) {
-    info!("Received {:?} VTU bytes", data.len());
+pub fn import_file_path(path: &str) {
+    info!("Received file path: {}", path);
 }
