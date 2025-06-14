@@ -1,7 +1,7 @@
 'use client';
 
 import {useEffect} from "react";
-import init, {read_file} from "./rust-vtu.js";
+import init, {import_file_path} from "./rust-vtu.js";
 
 export type WasmAppProps = {
   inputFiles: File[]
@@ -12,7 +12,7 @@ export const WasmApp = (props: WasmAppProps) => {
   useEffect(() => {
     (async () => {
       await init()
-      read_file(props.inputFiles[0].name, await props.inputFiles[0].bytes())
+      import_file_path(props.inputFiles[0].webkitRelativePath)
     })()
   }, []);
 
