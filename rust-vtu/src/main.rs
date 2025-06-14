@@ -1,3 +1,4 @@
+pub mod parse;
 pub mod plugins;
 
 use bevy::prelude::*;

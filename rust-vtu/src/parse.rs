@@ -1,8 +1,8 @@
 // This is some terrible code to extract verticies from a vtu file, and makes a lot of assumptions on the file format.
 
 use vtkio::{
-    IOBuffer,
     model::{DataSet, Piece, Vtk},
+    IOBuffer,
 };
 
 /* e.g.

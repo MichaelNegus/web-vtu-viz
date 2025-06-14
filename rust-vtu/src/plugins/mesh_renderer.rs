@@ -1,6 +1,7 @@
-use bevy::asset::RenderAssetUsages;
-use bevy::prelude::*;
-use bevy::render::render_resource::PrimitiveTopology;
+use bevy::{log::tracing_subscriber::reload::Handle, prelude::*};
+use vtkio::Vtk;
+
+use crate::parse::vtu_vertices;
 
 pub struct CustomMeshPlugin;
 
@@ -10,55 +11,36 @@ impl Plugin for CustomMeshPlugin {
     }
 }
 
+const VTU_DEMO_FILE: &str = "assets/box.vtu";
+
+fn parse_vtu_pts(path: &str) -> Result<Vec<[f64; 3]>, String> {
+    let file_path = std::path::PathBuf::from(path);
+    let vtk_file = Vtk::import(file_path).map_err(|e| e.to_string())?;
+    vtu_vertices(vtk_file)
+}
+
 fn spawn_custom_mesh(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    // Define vertices and indices
-    // let _: Vec<[f32; 3]> = vec![([0.0, 1.0, 0.0]), ([0.0, 1.0, 0.0]), ([0.0, 1.0, 0.0])];
+    let points = parse_vtu_pts(VTU_DEMO_FILE).expect("Failed to read pts");
 
-    // let vertices: Vec<[f32; 3]> = vec![([0.0, 0.0, 0.0]), ([1.0, 0.0, 0.0]), ([0.5, 1.0, 0.0])];
-
-    // let _custom_mesh =
-    //     bevy::prelude::Mesh::new(PrimitiveTopology::TriangleList, RenderAssetUsages::all())
-    //         .with_inserted_attribute(bevy::prelude::Mesh::ATTRIBUTE_POSITION, vertices)
-    //         .with_inserted_indices(Indices::U16(vec![0, 1, 2]));
-
-    let dim = 0.25;
+    let dim = 0.10;
     let mesh_cube = Cuboid {
         half_size: [dim, dim, dim].into(),
     };
 
     let mesh_handle = meshes.add(mesh_cube);
 
-    let num_y = 25;
-    let num_x = 25;
-    let num_z = 25;
-    let spacing = 1.;
-    for z in 0..num_y {
-        for y in 0..num_z {
-            for x in 0..num_x {
-                let x01 = x as f32 * spacing;
-                let y01 = y as f32 * spacing;
-                let z01 = z as f32 * spacing;
-                // sphere
-                commands.spawn((
-                    Mesh3d(mesh_handle.clone()),
-                    MeshMaterial3d(
-                        materials.add(StandardMaterial {
-                            base_color: Srgba::rgb(
-                                x as f32 / num_x as f32,
-                                y as f32 / num_y as f32,
-                                z as f32 / num_z as f32,
-                            )
-                            .into(),
-                            ..default()
-                        }),
-                    ),
-                    Transform::from_xyz(x01, y01, z01),
-                ));
-            }
-        }
+    for pt in points {
+        commands.spawn((
+            Mesh3d(mesh_handle.clone()),
+            MeshMaterial3d(materials.add(StandardMaterial {
+                base_color: Srgba::new(1., 1., 0.5, 1.).into(),
+                ..default()
+            })),
+            Transform::from_xyz(pt[0] as f32, pt[1] as f32, pt[2] as f32),
+        ));
     }
 }
