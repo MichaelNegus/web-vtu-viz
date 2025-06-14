@@ -2,7 +2,9 @@ export const Sidetray = () => {
   return (
     <div className="flex flex-col gap-4 w-60 bg-card border-r border-border h-full">
       <div className="flex items-center justify-center p-4 border-b border-border">
-        <h2 className="text-lg font-semibold text-foreground h-10">VTU Viz</h2>
+        <h2 className="text-lg font-semibold text-foreground h-10 flex items-center justify-center">
+          VTU Viz
+        </h2>
       </div>
 
       <div className="flex flex-col gap-2 p-4">

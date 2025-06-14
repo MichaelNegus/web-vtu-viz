@@ -7,14 +7,6 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
   const toggleTheme = () => {
     if (theme === "light") {
       setTheme("dark");
@@ -35,6 +27,18 @@ export function ThemeToggle() {
         return "💻";
     }
   };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <button className="flex items-center justify-center w-10 h-10 rounded-md border bg-background text-foreground border-border hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-colors">
+        <span className="text-lg">{"💻"}</span>
+      </button>
+    );
+  }
 
   return (
     <button
