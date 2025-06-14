@@ -22,10 +22,6 @@ export const Sidetray = () => {
         <button className="w-full p-2 text-left rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors">
           Secondary Button
         </button>
-
-        <button className="w-full p-2 text-left rounded-md bg-accent text-accent-foreground hover:bg-accent/80 transition-colors">
-          Accent Button
-        </button>
       </div>
     </div>
   );
