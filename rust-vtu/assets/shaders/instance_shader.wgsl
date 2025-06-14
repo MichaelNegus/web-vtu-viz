@@ -4,7 +4,7 @@
 }
 
 struct CustomMaterial {
-    color: vec4<f32>,
+    scale: f32,
 };
 @group(2) @binding(0) var<uniform> material: CustomMaterial;
 
@@ -15,20 +15,17 @@ struct Vertex {
 
 struct VertexOutput {
     @builtin(position) clip_position: vec4<f32>,
-    @location(0) world_position: vec4<f32>,
-    @location(1) color: vec4<f32>,
+    @location(0) color: vec4<f32>,
 };
 
 @vertex
 fn vertex(vertex: Vertex) -> VertexOutput {
     var out: VertexOutput;
 
-    let tag = mesh_functions::get_tag(vertex.instance_index);
     var world_from_local = mesh_functions::get_world_from_local(vertex.instance_index);
-    out.world_position = mesh_functions::mesh_position_local_to_world(world_from_local, vec4(vertex.position, 1.0));
-    out.clip_position = position_world_to_clip(out.world_position.xyz);
-
-    out.color = material.color;
+    let scaled = vertex.position * material.scale;
+    out.clip_position = mesh_functions::mesh_position_local_to_clip(world_from_local, vec4(scaled, 1.0));
+    out.color = vec4<f32>(1,0,0,1);
     return out;
 }
 
@@ -36,5 +33,5 @@ fn vertex(vertex: Vertex) -> VertexOutput {
 fn fragment(
     mesh: VertexOutput,
 ) -> @location(0) vec4<f32> {
-    return material.color;
+    return mesh.color;
 }
