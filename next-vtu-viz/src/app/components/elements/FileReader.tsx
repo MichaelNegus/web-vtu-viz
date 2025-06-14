@@ -58,80 +58,63 @@ export function FileReader({ className = "" }: FileReaderProps) {
 
     const extension = fileContent.name.split(".").pop()?.toLowerCase();
 
-    switch (extension) {
-      case "vtu":
-        const vtuData = parsedContent as {
-          isXML: boolean;
-          hasPoints: boolean;
-          hasCells: boolean;
-          pointCount?: number;
-          cellCount?: number;
-          content: string;
-        };
-        return (
-          <div className="space-y-4">
-            <div className="box-border grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-card border border-border rounded-md">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground">
-                  {vtuData.isXML ? "XML" : "Binary"}
-                </div>
-                <div className="text-sm text-muted-foreground">Format</div>
+    if (extension === "vtu") {
+      const vtuData = parsedContent as {
+        isXML: boolean;
+        hasPoints: boolean;
+        hasCells: boolean;
+        pointCount?: number;
+        cellCount?: number;
+        content: string;
+      };
+
+      return (
+        <div className="space-y-4">
+          <div className="box-border grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-card border border-border rounded-md">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">
+                {vtuData.isXML ? "XML" : "Binary"}
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground">
-                  {vtuData.pointCount || "Unknown"}
-                </div>
-                <div className="text-sm text-muted-foreground">Points</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground">
-                  {vtuData.cellCount || "Unknown"}
-                </div>
-                <div className="text-sm text-muted-foreground">Cells</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-foreground">
-                  {vtuData.hasPoints && vtuData.hasCells ? "✅" : "❌"}
-                </div>
-                <div className="text-sm text-muted-foreground">Valid</div>
-              </div>
+              <div className="text-sm text-muted-foreground">Format</div>
             </div>
-
-            <details className="box-border border border-border rounded-md">
-              <summary className="px-4 py-2 bg-muted cursor-pointer hover:bg-accent transition-colors">
-                View Raw Content (first 1000 characters)
-              </summary>
-              <pre className="p-4 text-xs overflow-auto max-h-64 text-muted-foreground">
-                {vtuData.content.substring(0, 1000)}
-                {vtuData.content.length > 1000 && "..."}
-              </pre>
-            </details>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">
+                {vtuData.pointCount || "Unknown"}
+              </div>
+              <div className="text-sm text-muted-foreground">Points</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">
+                {vtuData.cellCount || "Unknown"}
+              </div>
+              <div className="text-sm text-muted-foreground">Cells</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">
+                {vtuData.hasPoints && vtuData.hasCells ? "✅" : "❌"}
+              </div>
+              <div className="text-sm text-muted-foreground">Valid</div>
+            </div>
           </div>
-        );
 
-      default:
-        // For images, show the image
-        if (fileContent.type.startsWith("image/")) {
-          return (
-            <img
-              src={parsedContent as string}
-              alt={fileContent.name}
-              className="max-w-full max-h-96 rounded-md border border-border"
-            />
-          );
-        }
-
-        // For other text files
-        return (
-          <pre className="box-border bg-muted p-4 rounded-md text-sm overflow-auto max-h-96 whitespace-pre-wrap">
-            {typeof parsedContent === "string"
-              ? parsedContent.length > 2000
-                ? parsedContent.substring(0, 2000) + "..."
-                : parsedContent
-              : String(parsedContent)}
-          </pre>
-        );
+          <details className="box-border border border-border rounded-md">
+            <summary className="px-4 py-2 bg-muted cursor-pointer hover:bg-accent transition-colors">
+              View Raw Content (first 1000 characters)
+            </summary>
+            <pre className="p-4 text-xs overflow-auto max-h-64 text-muted-foreground">
+              {vtuData.content.substring(0, 1000)}
+              {vtuData.content.length > 1000 && "..."}
+            </pre>
+          </details>
+        </div>
+      );
     }
+
+    return (
+      <pre className="box-border bg-muted p-4 rounded-md text-sm overflow-auto max-h-96 whitespace-pre-wrap">
+        Invalid content type.
+      </pre>
+    );
   };
 
   return (
