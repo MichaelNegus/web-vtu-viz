@@ -11,7 +11,6 @@ export type WasmAppProps = {
 export const WasmApp = (props: WasmAppProps) => {
   useEffect(() => {
     (async () => {
-      console.log("Reading file", props.inputData);
       await init();
       read_file(props.name, new Uint8Array(props.inputData));
     })();

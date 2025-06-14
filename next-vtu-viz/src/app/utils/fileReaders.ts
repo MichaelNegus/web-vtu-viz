@@ -16,6 +16,7 @@ export const readFileAsText = (file: File): Promise<FileContent> => {
     const reader = new FileReader();
 
     reader.onload = (event) => {
+      console.log("File content:", event.target?.result);
       resolve({
         name: file.name,
         size: file.size,
@@ -129,7 +130,7 @@ export const parseVTUFile = async (
   cellCount?: number;
 }> => {
   const fileContent = await readFileAsText(file);
-  const content = fileContent.content;
+  const content = fileContent.content as string;
 
   const isXML = content.includes("<?xml") || content.includes("<VTKFile");
   const hasPoints = content.includes("<Points>") || content.includes("POINTS");
