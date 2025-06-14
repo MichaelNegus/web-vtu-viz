@@ -1,10 +1,12 @@
 use bevy::prelude::*;
+use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
 /// Main app entry point.
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
+        .add_plugins(PanOrbitCameraPlugin)
         .run();
 }
 
@@ -32,7 +34,7 @@ fn setup(
         Transform::from_xyz(4.0, 8.0, 4.0),
     ));
     commands.spawn((
-        Camera3d::default(),
+        PanOrbitCamera::default(),
         Transform::from_xyz(-2.5, 4.5, 9.0).looking_at(Vec3::ZERO, Vec3::Y),
     ));
 }
