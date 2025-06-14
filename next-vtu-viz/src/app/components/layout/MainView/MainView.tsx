@@ -2,7 +2,7 @@
 
 import { FileUpload } from "../../elements";
 import { useState } from "react";
-import { readFileAsText } from "@/app/utils/fileReaders";
+// import { readFileAsText } from "@/app/utils/fileReaders";
 import { WasmApp } from "@/app/wasm-app/WasmApp";
 
 export const MainView: React.FC = () => {
@@ -18,10 +18,10 @@ export const MainView: React.FC = () => {
       try {
         const file = files[0];
         setFile(file);
-        // Read as text
-        const content = await readFileAsText(file);
 
-        setArrayBuffer(content.content as ArrayBuffer);
+        const arrayBuffer = await file.arrayBuffer();
+
+        setArrayBuffer(arrayBuffer);
       } catch (error) {
         console.error("Failed to read file:", error);
       } finally {
