@@ -1,21 +1,16 @@
 "use client";
 
 import { useEffect } from "react";
-import init, { read_file } from "./rust-vtu.js";
+import init from "./rust-vtu.js";
 
-export type WasmAppProps = {
-  name: string;
-  inputData: ArrayBuffer;
-};
-
-export const WasmApp = (props: WasmAppProps) => {
+export const WasmApp = () => {
   useEffect(() => {
     (async () => {
-      console.log("Reading file", props.inputData);
-      const byteArray = new Uint8Array(props.inputData);
-      console.log("Byte array", byteArray);
+      // console.log("Reading file", props.inputData);
+      // const byteArray = new Uint8Array(props.inputData);
+      // console.log("Byte array", byteArray);
       await init();
-      read_file(props.name, byteArray);
+      // read_file(props.name, byteArray);
     })();
   }, []);
 

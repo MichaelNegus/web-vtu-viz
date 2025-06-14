@@ -115,10 +115,6 @@ export function FileReader({ className = "" }: FileReaderProps) {
     );
   };
 
-  if (fileData) {
-    return <WasmApp name={fileContent?.name || ""} inputData={fileData} />;
-  }
-
   return (
     <div className={`space-y-6 ${className}`}>
       <FileUpload
