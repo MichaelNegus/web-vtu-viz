@@ -1,10 +1,16 @@
 "use client";
 
 import { FileUpload } from "../../elements";
+import {WasmApp} from "@/app/wasm-app/WasmApp";
+import {useState} from "react";
 
 export const MainView: React.FC = () => {
+
+  const [files, setFiles] = useState<File[]>([])
+
   const handleFileSelect = (files: File[]) => {
     console.log("Selected files:", files);
+    setFiles(files)
     // Here you would typically upload the files to your server
   };
 
@@ -32,6 +38,7 @@ export const MainView: React.FC = () => {
               multiple={false}
               maxSize={5 * 1024 * 1024} // 5MB
             />
+            {files.length > 0 && <WasmApp inputFiles={files}/>}
           </div>
         </div>
       </div>

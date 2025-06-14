@@ -1,5 +1,4 @@
-import { Header, Sidetray, MainView } from "./components/layout";
-import {WasmApp} from "@/app/wasm-app/WasmApp";
+import {Header, MainView, Sidetray} from "./components/layout";
 
 export default function Home() {
   return (
@@ -8,7 +7,6 @@ export default function Home() {
       <div className="bg-background w-full">
         <Header />
         <MainView />
-        <WasmApp />
       </div>
     </main>
   );

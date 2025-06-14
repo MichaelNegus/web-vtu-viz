@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
+
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
 
@@ -15,7 +16,6 @@ pub fn main_js() {
     app();
 }
 
-//#[cfg(not(target_arch = "wasm32"))]
 fn main() {
     app();
 }
@@ -33,6 +33,12 @@ fn app() {
         .add_systems(Startup, setup)
         .add_plugins(PanOrbitCameraPlugin)
         .run();
+}
+
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn import_file_path(path: &str) {
+    info!("Received file path: {}", path);
 }
 
 /// Set up basic scene with a cube.
