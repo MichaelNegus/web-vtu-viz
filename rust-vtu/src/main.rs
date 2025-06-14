@@ -1,6 +1,8 @@
 pub mod parse;
 pub mod plugins;
 
+use plugins::mesh_renderer::CustomMaterial;
+
 use bevy::prelude::*;
 use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 
@@ -29,7 +31,7 @@ fn main() {
 /// Main app entry point.
 fn app() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins((DefaultPlugins, MaterialPlugin::<CustomMaterial>::default()))
         .add_systems(Startup, setup)
         .add_plugins(PanOrbitCameraPlugin)
         .add_plugins(CustomMeshPlugin)
