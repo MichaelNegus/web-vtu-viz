@@ -1,20 +1,21 @@
-'use client';
+"use client";
 
-import {useEffect} from "react";
-import init, {read_file} from "./rust-vtu.js";
+import { useEffect } from "react";
+import init, { read_file } from "./rust-vtu.js";
 
 export type WasmAppProps = {
-  inputFiles: File[]
-}
+  name: string;
+  inputData: ArrayBuffer;
+};
 
 export const WasmApp = (props: WasmAppProps) => {
-
   useEffect(() => {
     (async () => {
-      await init()
-      read_file(props.inputFiles[0].name, await props.inputFiles[0].bytes())
-    })()
+      console.log("Reading file", props.inputData);
+      await init();
+      read_file(props.name, new Uint8Array(props.inputData));
+    })();
   }, []);
 
-  return <canvas id="wasm-app" width="400" height="300"/>
-}
+  return <canvas id="wasm-app" width="400" height="300" />;
+};

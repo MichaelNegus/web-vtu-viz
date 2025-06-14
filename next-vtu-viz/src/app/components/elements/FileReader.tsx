@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import { FileUpload } from "./FileUpload";
-import {
-  readFileAuto,
-  parseVTUFile,
-  FileContent,
-} from "@/app/utils/fileReaders";
+import { readFileAuto, FileContent } from "@/app/utils/fileReaders";
+import { WasmApp } from "@/app/wasm-app/WasmApp";
 
 interface FileReaderProps {
   className?: string;
@@ -17,6 +14,7 @@ export function FileReader({ className = "" }: FileReaderProps) {
   const [parsedContent, setParsedContent] = useState<unknown>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
+  const [fileData, setFileData] = useState<ArrayBuffer | null>(null);
 
   const handleFileSelect = async (files: File[]) => {
     if (files.length === 0) return;
@@ -35,8 +33,8 @@ export function FileReader({ className = "" }: FileReaderProps) {
       const extension = file.name.split(".").pop()?.toLowerCase();
 
       if (extension === "vtu") {
-        const vtuData = await parseVTUFile(file);
-        setParsedContent(vtuData);
+        const fileData = content.content as ArrayBuffer;
+        setFileData(fileData);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to read file");
@@ -116,6 +114,10 @@ export function FileReader({ className = "" }: FileReaderProps) {
       </pre>
     );
   };
+
+  if (fileData) {
+    return <WasmApp name={fileContent?.name || ""} inputData={fileData} />;
+  }
 
   return (
     <div className={`space-y-6 ${className}`}>

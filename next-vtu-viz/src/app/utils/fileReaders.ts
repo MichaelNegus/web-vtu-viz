@@ -129,7 +129,7 @@ export const parseVTUFile = async (
   cellCount?: number;
 }> => {
   const fileContent = await readFileAsText(file);
-  const content = fileContent.content as string;
+  const content = fileContent.content;
 
   const isXML = content.includes("<?xml") || content.includes("<VTKFile");
   const hasPoints = content.includes("<Points>") || content.includes("POINTS");
