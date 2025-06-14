@@ -1,14 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 export function main_js(): void;
-export function import_file_path(path: string): void;
+export function read_file(name: string, _data: Uint8Array): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly main_js: () => void;
-  readonly import_file_path: (a: number, b: number) => void;
+  readonly read_file: (a: number, b: number, c: number, d: number) => void;
   readonly main: (a: number, b: number) => number;
   readonly __externref_table_alloc: () => number;
   readonly __wbindgen_export_1: WebAssembly.Table;

@@ -264,13 +264,22 @@ export function main_js() {
     wasm.main_js();
 }
 
+function passArray8ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 1, 1) >>> 0;
+    getUint8ArrayMemory0().set(arg, ptr / 1);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
+}
 /**
- * @param {string} path
+ * @param {string} name
+ * @param {Uint8Array} _data
  */
-export function import_file_path(path) {
-    const ptr0 = passStringToWasm0(path, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+export function read_file(name, _data) {
+    const ptr0 = passStringToWasm0(name, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len0 = WASM_VECTOR_LEN;
-    wasm.import_file_path(ptr0, len0);
+    const ptr1 = passArray8ToWasm0(_data, wasm.__wbindgen_malloc);
+    const len1 = WASM_VECTOR_LEN;
+    wasm.read_file(ptr0, len0, ptr1, len1);
 }
 
 function __wbg_adapter_32(arg0, arg1, arg2) {
@@ -2083,7 +2092,7 @@ function __wbg_get_imports() {
         const ret = false;
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper151379 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper151360 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 118234, __wbg_adapter_59);
         return ret;
     };
@@ -2127,7 +2136,7 @@ function __wbg_get_imports() {
         const ret = makeMutClosure(arg0, arg1, 4774, __wbg_adapter_35);
         return ret;
     };
-    imports.wbg.__wbindgen_closure_wrapper79513 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbindgen_closure_wrapper79493 = function(arg0, arg1, arg2) {
         const ret = makeMutClosure(arg0, arg1, 61425, __wbg_adapter_56);
         return ret;
     };

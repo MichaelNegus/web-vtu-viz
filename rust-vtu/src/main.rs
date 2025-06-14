@@ -37,8 +37,8 @@ fn app() {
 
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub fn import_file_path(path: &str) {
-    info!("Received file path: {}", path);
+pub fn read_file(name: &str, _data: Vec<u8>) {
+    info!("Received file path: {}", name);
 }
 
 /// Set up basic scene with a cube.
