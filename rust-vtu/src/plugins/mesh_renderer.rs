@@ -45,13 +45,18 @@ fn spawn_custom_mesh(
                 // sphere
                 commands.spawn((
                     Mesh3d(mesh_handle.clone()),
-                    MeshMaterial3d(materials.add(StandardMaterial {
-                        base_color: Srgba::rgb(x as f32 / num_x as f32, y as f32 / num_y as f32, z as f32 / num_z as f32).into(),
-                        ..default()
-                    })),
-                    Transform::from_xyz(
-                        x01, y01, z01
+                    MeshMaterial3d(
+                        materials.add(StandardMaterial {
+                            base_color: Srgba::rgb(
+                                x as f32 / num_x as f32,
+                                y as f32 / num_y as f32,
+                                z as f32 / num_z as f32,
+                            )
+                            .into(),
+                            ..default()
+                        }),
                     ),
+                    Transform::from_xyz(x01, y01, z01),
                 ));
             }
         }

@@ -6,6 +6,8 @@ use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
 
+use crate::plugins::mesh_renderer::CustomMeshPlugin;
+
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn main_js() {
