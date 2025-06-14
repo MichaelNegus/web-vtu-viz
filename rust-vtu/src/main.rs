@@ -38,7 +38,7 @@ fn app() {
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn read_file(name: &str, _data: Vec<u8>) {
-    info!("Received file path: {}", name);
+    info!("Loaded file {}, data length {}", name, _data.len());
 }
 
 /// Set up basic scene with a cube.
