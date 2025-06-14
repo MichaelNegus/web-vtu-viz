@@ -20,7 +20,7 @@ pub fn main_js() {
     app();
 }
 
-// #[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(target_arch = "wasm32"))]
 fn main() {
     app();
 }
