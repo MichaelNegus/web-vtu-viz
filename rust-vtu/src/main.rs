@@ -9,7 +9,7 @@ use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
 
-use crate::plugins::instanced_renderer::InstanceRenderPlugin;
+use crate::plugins::{instanced_renderer::InstanceRenderPlugin, isosurface::IsosurfacePlugin};
 
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
@@ -35,6 +35,7 @@ fn app() {
         .add_systems(Startup, setup)
         .add_plugins(PanOrbitCameraPlugin)
         .add_plugins(InstanceRenderPlugin)
+        .add_plugins(IsosurfacePlugin)
         .run();
 }
 
