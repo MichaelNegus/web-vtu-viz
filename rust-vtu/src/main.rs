@@ -1,7 +1,7 @@
 pub mod parse;
 pub mod plugins;
 
-use plugins::mesh_renderer::CustomMaterial;
+use bevy::render::view::NoIndirectDrawing;
 
 use bevy::prelude::*;
 use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
@@ -9,7 +9,7 @@ use bevy_panorbit_camera::{PanOrbitCamera, PanOrbitCameraPlugin};
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
 
-use crate::plugins::mesh_renderer::CustomMeshPlugin;
+use crate::plugins::instanced_renderer::InstanceRenderPlugin;
 
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
@@ -31,10 +31,10 @@ fn main() {
 /// Main app entry point.
 fn app() {
     App::new()
-        .add_plugins((DefaultPlugins, MaterialPlugin::<CustomMaterial>::default()))
+        .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
         .add_plugins(PanOrbitCameraPlugin)
-        .add_plugins(CustomMeshPlugin)
+        .add_plugins(InstanceRenderPlugin)
         .run();
 }
 
@@ -43,5 +43,6 @@ fn setup(mut commands: Commands) {
     commands.spawn((
         PanOrbitCamera::default(),
         Transform::from_xyz(-2.5, 4.5, 9.0).looking_at(Vec3::ZERO, Vec3::Y),
+        NoIndirectDrawing,
     ));
 }
