@@ -166,7 +166,7 @@ pub fn fan_streamline_points(cell_centres: &[[f32; 3]], velocity: &[[f32; 3]]) -
     let fan_radius = 0.05;
 
     // Generate randomised starting positions somewhere in the fan area
-    for i in 0..100 {
+    for i in 0..10 {
         // random angle in radians
         let angle = i as f32 * (2.0 * std::f32::consts::PI / 10.0) + rand::random::<f32>() * 0.1;
         let r = fan_radius * rand::random::<f32>(); // Random radius between 0 and fan_radius
@@ -177,7 +177,7 @@ pub fn fan_streamline_points(cell_centres: &[[f32; 3]], velocity: &[[f32; 3]]) -
         let z = fan_center[2] + r * angle.sin();
 
         // Generate streamline points from this position
-        let streamline_points = streamline_points([x, y, z], 1000, &velocity, &cell_centres, 0.001);
+        let streamline_points = streamline_points([x, y, z], 100, &velocity, &cell_centres, 0.01);
         all_streamline_points.extend(streamline_points);
 
         all_streamline_points.push([x, y, z]);

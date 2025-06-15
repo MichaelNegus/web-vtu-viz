@@ -71,7 +71,7 @@ fn spawn(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>) {
     }
 
     let all_streamline_points = fan_streamline_points(&cell_centres, &velocity);
-
+    
     for pos in all_streamline_points.iter() {
         let pos = Vec3::new(pos[0], pos[1], pos[2]);
         instance_data.push(InstanceData {
