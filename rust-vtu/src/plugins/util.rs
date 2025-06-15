@@ -162,3 +162,32 @@ pub fn streamline_points(
 
     points
 }
+
+pub fn fan_streamline_points(cell_centres: &[[f32; 3]], velocity: &[[f32; 3]]) -> Vec<[f32; 3]> {
+    // Get streamline points. Start with an empty list and call the streamline_points function repeatedly
+
+    // Empty vector to hold all streamline points
+    let mut all_streamline_points = Vec::new();
+
+    let fan_center = [0.0, 0.075, 0.125];
+    let fan_radius = 0.05;
+
+    // Generate randomised starting positions somewhere in the fan area
+    for i in 0..100 {
+        // random angle in radians
+        let angle = i as f32 * (2.0 * std::f32::consts::PI / 10.0) + rand::random::<f32>() * 0.1;
+        let r = fan_radius * rand::random::<f32>(); // Random radius between 0 and fan_radius
+
+        // random radius in the range [0, fan_radius]
+        let x = fan_center[0];
+        let y = fan_center[1] + r * angle.cos();
+        let z = fan_center[2] + r * angle.sin();
+
+        // Generate streamline points from this position
+        let streamline_points = streamline_points([x, y, z], 1000, &velocity, &cell_centres, 0.001);
+        all_streamline_points.extend(streamline_points);
+
+        all_streamline_points.push([x, y, z]);
+    }
+    all_streamline_points
+}

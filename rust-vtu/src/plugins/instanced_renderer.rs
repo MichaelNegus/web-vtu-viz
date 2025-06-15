@@ -37,7 +37,7 @@ use bevy::{
 };
 use bytemuck::{Pod, Zeroable};
 
-use crate::plugins::util::{self, cool_warm_col_from_val, min_max_norm};
+use crate::plugins::util::{self, cool_warm_col_from_val, fan_streamline_points, min_max_norm};
 
 /// This example uses a shader source file from the assets subdirectory
 const SHADER_ASSET_PATH: &str = "shaders/instancing.wgsl";
@@ -70,19 +70,7 @@ fn spawn(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>) {
         });
     }
 
-    // Get streamline points. Start with an empty list and call the streamline_points function repeatedly
-    
-    // Empty vector to hold all streamline points
-    let mut all_streamline_points = Vec::new();
-    
-    for i in 0..20 {
-        let start_pos = [0.05, 0.1, 0.1 + i as f32 * 0.025];
-        let streamline_points = util::streamline_points(start_pos, 10000, &velocity, &cell_centres, 0.0001);
-        all_streamline_points.extend(streamline_points);
-    }
-    // let all_streamline_points = util::streamline_points([0.1, 0.1, 0.1], 1000, &velocity, &cell_centres, 0.001);
-    // let streamline_points_list =
-    //     util::streamline_points([0.1, 0.1, 0.1], 1000, &velocity, &cell_centres, 0.001);
+    let all_streamline_points = fan_streamline_points(&cell_centres, &velocity);
 
     for pos in all_streamline_points.iter() {
         let pos = Vec3::new(pos[0], pos[1], pos[2]);
