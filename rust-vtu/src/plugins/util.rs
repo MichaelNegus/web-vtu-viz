@@ -1,17 +1,10 @@
 use core::f32;
 
 use bevy::math::{NormedVectorSpace, Vec3};
-use vtkio::Vtk;
-
-use crate::parse::{parse_csv_to_vec_f32, parse_csv_to_vec_i32, vtu_vertices};
+use crate::parse::parse_csv_to_vec_f32;
+use crate::parse::parse_csv_to_vec_i32;
 
 pub const VTU_DEMO_FILE: &str = "assets/vtu/box.vtu";
-
-pub fn parse_vtu_pts(path: &str) -> Result<Vec<[f64; 3]>, String> {
-    let file_path = std::path::PathBuf::from(path);
-    let vtk_file = Vtk::import(file_path).map_err(|e| e.to_string())?;
-    vtu_vertices(vtk_file)
-}
 
 // Generate a dummmy grid of point
 pub fn dummy_pts(size: usize) -> Vec<[f32; 3]> {
