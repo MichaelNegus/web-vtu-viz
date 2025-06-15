@@ -1,4 +1,4 @@
-use bevy::{app::{App, Plugin, Startup}, asset::{Assets, RenderAssetUsages}, color::{palettes::css::{ORANGE_RED, RED, WHITE_SMOKE}, ColorToComponents, LinearRgba}, ecs::system::{Commands, ResMut}, math::{primitives::Cuboid, NormedVectorSpace, Vec3}, pbr::{AmbientLight, MeshMaterial3d, StandardMaterial}, render::mesh::{Indices, Mesh, Mesh3d, PrimitiveTopology}, utils::default};
+use bevy::{app::{App, Plugin, Startup}, asset::{Assets, RenderAssetUsages}, color::{palettes::css::WHITE_SMOKE, ColorToComponents, LinearRgba}, ecs::system::{Commands, ResMut}, math::{NormedVectorSpace, Vec3}, pbr::{AmbientLight, MeshMaterial3d, StandardMaterial}, render::mesh::{Indices, Mesh, Mesh3d, PrimitiveTopology}, utils::default};
 
 use crate::plugins::{marching_cubes::algorithm::{iso_surface, Triangle}, util};
 
