@@ -59,17 +59,39 @@ fn spawn(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>) {
     let mut instance_data = Vec::new();
 
     let (min, max) = min_max_norm(&velocity);
-    for (pos, vel) in cell_centres.iter().zip(velocity) {
+    for (pos, vel) in cell_centres.iter().zip(velocity.clone()) {
         let pos = Vec3::new(pos[0], pos[1], pos[2]);
         let vel = Vec3::new(vel[0], vel[1], vel[2]);
         let col = cool_warm_col_from_val(vel.norm(), min, max);
         instance_data.push(InstanceData {
             position: pos,
-            scale: 0.02,
+            scale: 0.001,
             color: LinearRgba::from_f32_array_no_alpha(col.into()).to_f32_array(),
         });
     }
 
+    // Get streamline points. Start with an empty list and call the streamline_points function repeatedly
+    
+    // Empty vector to hold all streamline points
+    let mut all_streamline_points = Vec::new();
+    
+    for i in 0..20 {
+        let start_pos = [0.05, 0.1, 0.1 + i as f32 * 0.025];
+        let streamline_points = util::streamline_points(start_pos, 10000, &velocity, &cell_centres, 0.0001);
+        all_streamline_points.extend(streamline_points);
+    }
+    // let all_streamline_points = util::streamline_points([0.1, 0.1, 0.1], 1000, &velocity, &cell_centres, 0.001);
+    // let streamline_points_list =
+    //     util::streamline_points([0.1, 0.1, 0.1], 1000, &velocity, &cell_centres, 0.001);
+
+    for pos in all_streamline_points.iter() {
+        let pos = Vec3::new(pos[0], pos[1], pos[2]);
+        instance_data.push(InstanceData {
+            position: pos,
+            scale: 0.002,
+            color: LinearRgba::from_f32_array_no_alpha([0.0, 255.0, 0.0].into()).to_f32_array(),
+        });
+    }
     commands.spawn((
         Mesh3d(meshes.add(Cuboid::new(1.0, 1.0, 1.0))),
         InstanceMaterialData(instance_data),

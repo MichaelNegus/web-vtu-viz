@@ -107,3 +107,58 @@ pub fn min_max_norm(vecs: &[[f32; 3]]) -> (f32, f32) {
     }
     (min, max)
 }
+
+/// Find the index of the closest cell centre to a given point
+/// Take in a vector of cell centres and a sample point, then return the index of the closest cell centre.
+pub fn closest_cell_index(point: [f32; 3], cell_centres: &[[f32; 3]]) -> usize {
+    let mut closest_index = -1;
+    let mut closest_distance = f32::MAX;
+
+    for (i, &cell_centre) in cell_centres.iter().enumerate() {
+        let distance = Vec3::new(
+            point[0] - cell_centre[0],
+            point[1] - cell_centre[1],
+            point[2] - cell_centre[2],
+        )
+        .norm();
+        if distance < closest_distance {
+            closest_distance = distance;
+            closest_index = i as isize;
+        }
+    }
+
+    if closest_index < 0 {
+        panic!("No cell centres provided");
+    }
+
+    closest_index as usize
+}
+
+// Create a list of streamline points
+pub fn streamline_points(
+    start: [f32; 3],
+    num_streamline_points: usize,
+    velocity: &[[f32; 3]],
+    cell_centres: &[[f32; 3]],
+    dx: f32,
+) -> Vec<[f32; 3]> {
+    let mut points = Vec::with_capacity(num_streamline_points);
+    let mut current_point = start;
+
+    for _ in 0..num_streamline_points {
+        points.push(current_point);
+        let index = closest_cell_index(current_point, cell_centres);
+        let velocity_vector = velocity[index];
+
+        // Normalize the velocity vector to get a direction
+        let norm_velocity = Vec3::new(velocity_vector[0], velocity_vector[1], velocity_vector[2])
+            .normalize_or_zero();
+
+        // Update the current point based on the normalized velocity
+        current_point[0] += norm_velocity.x * dx; // Adjust step size as needed
+        current_point[1] += norm_velocity.y * dx;
+        current_point[2] += norm_velocity.z * dx;
+    }
+
+    points
+}
