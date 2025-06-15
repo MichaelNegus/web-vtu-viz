@@ -5,17 +5,23 @@ import init from "@/app/wasm-app/rust-vtu.js";
 
 export const WasmContext = createContext<{
   initialised: boolean;
-  file: File | null;
-  setFile: (file: File) => void;
+  fileParsed: boolean;
+  parseFile: (file: File) => void;
 }>({
   initialised: false,
-  file: null,
-  setFile: () => {},
+  fileParsed: false,
+  parseFile: () => {},
 });
 
 export const WasmProvider = ({ children }: { children: React.ReactNode }) => {
   const [initialised, setInitialised] = useState<boolean>(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [fileParsed, setFileParsed] = useState<boolean>(false);
+
+  const parseFile = (file: File) => {
+    console.log(file);
+    // TODO: Parse the file
+    setFileParsed(true);
+  };
 
   useEffect(() => {
     init();
@@ -23,7 +29,7 @@ export const WasmProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <WasmContext.Provider value={{ initialised, file, setFile }}>
+    <WasmContext.Provider value={{ initialised, fileParsed, parseFile }}>
       {children}
     </WasmContext.Provider>
   );
