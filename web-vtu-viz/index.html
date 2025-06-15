@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VTU Viz - WASM Test</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    
+    #wasm-canvas {
+      display: block;
+      margin: 20px auto;
+      border: 2px solid #333;
+      background: white;
+    }
+    
+    .status {
+      text-align: center;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+    }
+    
+    .loading {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .success {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background: #0056b3;
+    }
+    
+    button:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>VTU Viz - WASM Canvas Test</h1>
+    
+    <div id="status" class="status loading">
+      Loading WASM module...
+    </div>
+    
+    <canvas id="wasm-app" width="800" height="600"></canvas>
+    
+    <button id="init-btn" disabled>Manual Restart (if needed)</button>
+    <button id="test-btn" disabled>Test read_file Function</button>
+    
+    <div id="console-output" style="background: #000; color: #0f0; padding: 10px; margin: 20px 0; font-family: monospace; height: 200px; overflow-y: auto;"></div>
+  </div>
+
+  <script type="module">
+    // Console output helper
+    const consoleOutput = document.getElementById('console-output');
+    function log(message) {
+      console.log(message);
+      const div = document.createElement('div');
+      div.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
+      consoleOutput.appendChild(div);
+      consoleOutput.scrollTop = consoleOutput.scrollHeight;
+    }
+
+    // Status helper
+    const statusEl = document.getElementById('status');
+    function setStatus(message, type = 'loading') {
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`;
+      log(`Status: ${message}`);
+    }
+
+    // Global variables
+    let wasmModule = null;
+    let isInitialized = false;
+
+    // Initialize WASM
+    async function loadWasm() {
+      try {
+        setStatus('Loading WASM module...', 'loading');
+        
+        // Try to import the WASM module
+        log('Attempting to import WASM module...');
+        wasmModule = await import('./wasm/rust-vtu.js');
+        log('WASM module imported successfully');
+        
+                 // Initialize the module
+        log('Initializing WASM module...');
+        await wasmModule.default();
+        log('WASM module initialized');
+        
+        // Give Bevy a moment to start (it should auto-start due to #[wasm_bindgen(start)])
+        setTimeout(() => {
+          log('Bevy app should have auto-started by now');
+        }, 1000);
+        
+        setStatus('WASM module loaded successfully! Bevy app should be running.', 'success');
+        
+        // Enable buttons
+        document.getElementById('init-btn').disabled = false;
+        document.getElementById('test-btn').disabled = false;
+        
+        // Log available functions
+        const functions = Object.keys(wasmModule).filter(key => typeof wasmModule[key] === 'function');
+        log(`Available WASM functions: ${functions.join(', ')}`);
+        
+        return true;
+        
+      } catch (error) {
+        log(`Error loading WASM: ${error.message}`);
+        setStatus(`Failed to load WASM: ${error.message}`, 'error');
+        return false;
+      }
+    }
+
+    // Initialize Rust app
+    async function initRustApp() {
+      if (!wasmModule) {
+        log('WASM module not loaded yet');
+        return;
+      }
+
+      try {
+        setStatus('Initializing Rust app...', 'loading');
+        
+        const canvas = document.getElementById('wasm-app');
+        log(`Canvas element: ${canvas ? 'found' : 'not found'}`);
+        
+        if (!canvas) {
+          throw new Error('Canvas element not found');
+        }
+
+        // Try different possible function names
+        const initFunctions = ['init', 'start_app', 'run', 'main'];
+        let initFunction = null;
+        
+        for (const funcName of initFunctions) {
+          if (typeof wasmModule[funcName] === 'function') {
+            initFunction = wasmModule[funcName];
+            log(`Found init function: ${funcName}`);
+            break;
+          }
+        }
+        
+        if (!initFunction) {
+          // Try calling init without parameters first
+          if (typeof wasmModule.init === 'function') {
+            log('Calling init() function...');
+            wasmModule.init();
+            isInitialized = true;
+            setStatus('Rust app initialized successfully!', 'success');
+            return;
+          }
+          
+          throw new Error(`No init function found. Available functions: ${Object.keys(wasmModule).filter(key => typeof wasmModule[key] === 'function').join(', ')}`);
+        }
+
+        // Call the init function
+        log(`Calling ${initFunction.name || 'init function'}...`);
+        
+        // Try different calling patterns
+        try {
+          // Pattern 1: Pass canvas directly
+          initFunction(canvas);
+          log('Init called with canvas parameter');
+        } catch (e1) {
+          try {
+            // Pattern 2: Call without parameters
+            initFunction();
+            log('Init called without parameters');
+          } catch (e2) {
+            log(`Both calling patterns failed: ${e1.message}, ${e2.message}`);
+            throw e2;
+          }
+        }
+        
+        isInitialized = true;
+        setStatus('Rust app initialized successfully!', 'success');
+        
+      } catch (error) {
+        log(`Error initializing Rust app: ${error.message}`);
+        setStatus(`Failed to initialize: ${error.message}`, 'error');
+      }
+    }
+
+         // Test function
+     function testFunction() {
+       if (!wasmModule) {
+         log('WASM module not loaded');
+         return;
+       }
+
+       log('Testing WASM functions...');
+       
+       // List all available functions
+       const functions = Object.keys(wasmModule);
+       log(`All WASM exports: ${functions.join(', ')}`);
+       
+       // Test the read_file function specifically
+       if (typeof wasmModule.read_file === 'function') {
+         try {
+           log('Testing read_file function...');
+           const testData = new Uint8Array([1, 2, 3, 4, 5]);
+           wasmModule.read_file('test.vtu', testData);
+           log('read_file() called successfully');
+         } catch (error) {
+           log(`read_file() failed: ${error.message}`);
+         }
+       } else {
+         log('read_file function not found');
+       }
+       
+       // Try other common function names
+       const testFunctions = ['init', 'start', 'run', 'main_js'];
+       
+       for (const funcName of testFunctions) {
+         if (typeof wasmModule[funcName] === 'function') {
+           try {
+             log(`Found function: ${funcName}`);
+             // Don't call these as they might restart the app
+           } catch (error) {
+             log(`${funcName}() failed: ${error.message}`);
+           }
+         }
+       }
+     }
+
+    // Event listeners
+    document.getElementById('init-btn').addEventListener('click', initRustApp);
+    document.getElementById('test-btn').addEventListener('click', testFunction);
+
+    // Start the process
+    log('Starting WASM test...');
+    loadWasm();
+  </script>
+</body>
+</html> 
