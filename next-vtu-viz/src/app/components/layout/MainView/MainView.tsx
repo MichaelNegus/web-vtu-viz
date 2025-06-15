@@ -4,7 +4,7 @@ import { FileUpload } from "../../elements";
 import { useState } from "react";
 // import { readFileAsText } from "@/app/utils/fileReaders";
 import { WasmApp } from "@/app/wasm-app/WasmApp";
-import {read_file} from "@/app/wasm-app/rust-vtu";
+import { read_file } from "@/app/wasm-app/rust-vtu";
 
 export const MainView: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -18,8 +18,7 @@ export const MainView: React.FC = () => {
       try {
         const file = files[0];
         setFile(file);
-        read_file(file.name, new Uint8Array(await file.arrayBuffer()))
-
+        // read_file(file.name, new Uint8Array(await file.arrayBuffer()));
       } catch (error) {
         console.error("Failed to read file:", error);
       } finally {
@@ -27,6 +26,14 @@ export const MainView: React.FC = () => {
       }
     }
   };
+
+  if (file) {
+    return (
+      <div className="flex-1 bg-background">
+        <WasmApp />
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 p-8 bg-background">
@@ -65,9 +72,6 @@ export const MainView: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
-      <div className="flex-1 p-8 bg-background">
-        <WasmApp />
       </div>
     </div>
   );
