@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useWasm } from "@/app/providers/WasmProvider";
 
 export const EmptyState: React.FC = () => {
-  const { parseFile, fileParsed } = useWasm();
+  const { parseFile, isOpen } = useWasm();
   const [isReading, setIsReading] = useState(false);
 
   const handleFileSelect = async (files: File[]) => {
@@ -24,7 +24,7 @@ export const EmptyState: React.FC = () => {
   };
 
   return (
-    <div className={`flex-1 p-8 bg-background ${fileParsed ? "hidden" : ""}`}>
+    <div className={`flex-1 p-8 bg-background ${isOpen ? "hidden" : ""}`}>
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-4">
