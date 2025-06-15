@@ -1,4 +1,4 @@
-// This is some terrible code to extract verticies from a vtu file, and makes a lot of assumptions on the file format.
+// This is some terrible code to extract vertices from a vtu file, and makes a lot of assumptions on the file format.
 
 use vtkio::{
     model::{DataSet, Piece, Vtk},
@@ -14,6 +14,8 @@ fn main() {
     println!("{:?}", points);
 }
 */
+
+// pub fn parse_to_vtu(data: Vec<u8>) -> Vtk {}
 
 pub fn vtu_vertices(vtk: Vtk) -> Result<Vec<[f64; 3]>, String> {
     let data = match vtk.data {

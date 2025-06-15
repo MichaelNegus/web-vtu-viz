@@ -12,7 +12,7 @@ use wasm_bindgen::prelude::*;
 use crate::plugins::{instanced_renderer::InstanceRenderPlugin, isosurface::IsosurfacePlugin};
 
 #[cfg(target_arch = "wasm32")]
-#[wasm_bindgen]
+#[wasm_bindgen(start)]
 pub fn main_js() {
     // redirect panic messages to the browser console
     console_error_panic_hook::set_once();
@@ -23,7 +23,6 @@ pub fn main_js() {
     app();
 }
 
-#[cfg(not(target_arch = "wasm32"))]
 fn main() {
     app();
 }
@@ -31,12 +30,24 @@ fn main() {
 /// Main app entry point.
 fn app() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                canvas: Some("#wasm-app".into()),
+                ..default()
+            }),
+            ..default()
+        }))
         .add_systems(Startup, setup)
         .add_plugins(PanOrbitCameraPlugin)
         .add_plugins(InstanceRenderPlugin)
         .add_plugins(IsosurfacePlugin)
         .run();
+}
+
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn read_file(name: &str, _data: Vec<u8>) {
+    info!("Loaded file {}, data length {}", name, _data.len());
 }
 
 /// Set up basic scene with a cube.

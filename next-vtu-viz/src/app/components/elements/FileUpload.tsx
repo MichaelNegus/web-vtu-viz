@@ -206,8 +206,9 @@ export function FileUpload({
           <div className="space-y-2">
             {uploadedFiles.map((file, index) => (
               <div
+                onClick={() => onFileSelect?.([file])}
                 key={`${file.name}-${index}`}
-                className="box-border flex items-center justify-between p-3 rounded-md border border-border bg-card"
+                className="box-border flex items-center justify-between p-3 rounded-md border border-border bg-card cursor-pointer hover:bg-muted/50"
               >
                 <div className="flex items-center space-x-3 flex-1 min-w-0">
                   {file.preview ? (
@@ -245,7 +246,10 @@ export function FileUpload({
                 </div>
 
                 <button
-                  onClick={() => removeFile(index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile(index);
+                  }}
                   className="box-border ml-2 p-1 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
                   title="Remove file"
                 >

@@ -1,15 +1,21 @@
-'use client';
+"use client";
 
-import {useEffect} from "react";
+import { useEffect, useState } from "react";
 import init from "./rust-vtu.js";
 
 export const WasmApp = () => {
+  const [initialised, setInitialised] = useState<boolean>(false);
+
+  const handleInitialised = async () => {
+    await init();
+    setInitialised(true);
+  };
 
   useEffect(() => {
-    (async () => {
-      await init()
-    })()
-  }, []);
+    if (!initialised) {
+      handleInitialised();
+    }
+  }, [initialised]);
 
-  return <div>WASM app here...</div>
-}
+  return <canvas id="wasm-app" width="400" height="300" />;
+};

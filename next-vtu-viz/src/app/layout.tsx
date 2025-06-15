@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
 import "./globals.css";
+import { Sidetray } from "./components/layout/Sidetray/Sidetray";
+import { Header } from "./components/layout/Header/Header";
+import { WasmProvider } from "./providers/WasmProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,7 +38,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <WasmProvider>
+            <main className="flex h-screen">
+              <Sidetray />
+              <div className="bg-background w-full h-screen flex flex-col">
+                <Header />
+
+                {children}
+              </div>
+            </main>
+          </WasmProvider>
         </ThemeProvider>
       </body>
     </html>

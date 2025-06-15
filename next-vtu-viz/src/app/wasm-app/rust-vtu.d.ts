@@ -1,12 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 export function main_js(): void;
+export function read_file(name: string, _data: Uint8Array): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly main_js: () => void;
+  readonly read_file: (a: number, b: number, c: number, d: number) => void;
   readonly main: (a: number, b: number) => number;
   readonly __externref_table_alloc: () => number;
   readonly __wbindgen_export_1: WebAssembly.Table;
@@ -16,11 +18,11 @@ export interface InitOutput {
   readonly __wbindgen_free: (a: number, b: number, c: number) => void;
   readonly __wbindgen_export_6: WebAssembly.Table;
   readonly _dyn_core__ops__function__FnMut__A____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__he254c706bbc08909: (a: number, b: number, c: number) => void;
-  readonly closure4764_externref_shim: (a: number, b: number, c: any) => void;
-  readonly closure4761_externref_shim: (a: number, b: number, c: any, d: any) => void;
+  readonly closure4776_externref_shim: (a: number, b: number, c: any) => void;
+  readonly closure4773_externref_shim: (a: number, b: number, c: any, d: any) => void;
   readonly _dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h6cc159f3663c8598: (a: number, b: number) => void;
   readonly _dyn_core__ops__function__FnMut_____Output___R_as_wasm_bindgen__closure__WasmClosure___describe__invoke__h7e8d855325f1d686: (a: number, b: number) => void;
-  readonly closure118221_externref_shim: (a: number, b: number, c: any) => void;
+  readonly closure118233_externref_shim: (a: number, b: number, c: any) => void;
   readonly __wbindgen_start: () => void;
 }
 

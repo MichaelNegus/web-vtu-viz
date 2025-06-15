@@ -1,15 +1,10 @@
-import { Header, Sidetray, MainView } from "./components/layout";
-import {WasmApp} from "@/app/wasm-app/WasmApp";
+import { Canvas, EmptyState } from "./components/views";
 
 export default function Home() {
   return (
-    <main className="h-screen flex">
-      <Sidetray />
-      <div className="bg-background w-full">
-        <Header />
-        <MainView />
-        <WasmApp />
-      </div>
-    </main>
+    <div className="flex-1 overflow-y-scroll">
+      <EmptyState />
+      <Canvas />
+    </div>
   );
 }
