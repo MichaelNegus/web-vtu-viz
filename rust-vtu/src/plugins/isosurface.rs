@@ -1,6 +1,6 @@
 use bevy::{app::{App, Plugin, Startup}, asset::{Assets, RenderAssetUsages}, color::{palettes::css::WHITE_SMOKE, ColorToComponents, LinearRgba}, ecs::system::{Commands, ResMut}, math::{NormedVectorSpace, Vec3}, pbr::{AmbientLight, MeshMaterial3d, StandardMaterial}, render::mesh::{Indices, Mesh, Mesh3d, PrimitiveTopology}, utils::default};
 
-use crate::plugins::{marching_cubes::algorithm::{iso_surface, Triangle}, util};
+use crate::plugins::{data, marching_cubes::algorithm::{iso_surface, Triangle}, util};
 
 pub struct IsosurfacePlugin;
 
@@ -12,9 +12,9 @@ impl Plugin for IsosurfacePlugin {
 
 fn generate_iso_srf(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>, mut materials: ResMut<Assets<StandardMaterial>>){
     // Generate iso surface from cell data
-    let points = util::pts_from_csv("assets/csv/points.csv");
-    let cells = util::cells_from_csv("assets/csv/connectivity.csv");
-    let velocity = util::pts_from_csv("assets/csv/velocity.csv");
+    let points = data::points::get_points().expect("Failed to load point data");
+    let cells = data::cells::get_cells().expect("Failed to read cells");
+    let velocity =data::velocity::get_velocity().expect("Failed to parse velocity");
     let (min, max) = util::min_max_norm(&velocity);
 
     let cell_data: Vec<f32> = velocity.iter().map(|&v| Vec3::from_array(v).norm()).collect();

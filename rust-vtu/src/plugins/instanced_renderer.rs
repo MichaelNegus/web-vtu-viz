@@ -37,7 +37,7 @@ use bevy::{
 };
 use bytemuck::{Pod, Zeroable};
 
-use crate::plugins::util::{self, cool_warm_col_from_val, fan_streamline_points, min_max_norm};
+use crate::plugins::{data, util::{self, cool_warm_col_from_val, fan_streamline_points, min_max_norm}};
 
 /// This example uses a shader source file from the assets subdirectory
 const SHADER_ASSET_PATH: &str = "shaders/instancing.wgsl";
@@ -52,9 +52,9 @@ impl Plugin for InstanceRenderPlugin {
 }
 
 fn spawn(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>) {
-    let points = util::pts_from_csv("assets/csv/points.csv");
-    let cells = util::cells_from_csv("assets/csv/connectivity.csv");
-    let velocity = util::pts_from_csv("assets/csv/velocity.csv");
+    let points = data::points::get_points().expect("Failed to load point data");
+    let cells = data::cells::get_cells().expect("Failed to read cells");
+    let velocity =data::velocity::get_velocity().expect("Failed to parse velocity");
     let cell_centres = util::cell_centres(&points, &cells);
     let mut instance_data = Vec::new();
 

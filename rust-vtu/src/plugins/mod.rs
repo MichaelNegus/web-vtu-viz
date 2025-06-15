@@ -5,3 +5,4 @@ pub mod isosurface;
 pub mod util;
 
 pub mod marching_cubes;
+pub mod data;
