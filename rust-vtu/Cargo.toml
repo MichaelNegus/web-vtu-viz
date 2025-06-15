@@ -11,6 +11,7 @@ wasm-logger = "0.2"
 console_error_panic_hook = "0.1"
 vtkio = "0.6.3"
 bytemuck = "1.23.1"
+rand = "0.8.5"
 
 # Enable a small amount of optimization in the dev profile.
 [profile.dev]

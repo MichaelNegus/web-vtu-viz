@@ -37,7 +37,7 @@ use bevy::{
 };
 use bytemuck::{Pod, Zeroable};
 
-use crate::plugins::util::{self, cool_warm_col_from_val, min_max_norm};
+use crate::plugins::util::{self, cool_warm_col_from_val, fan_streamline_points, min_max_norm};
 
 /// This example uses a shader source file from the assets subdirectory
 const SHADER_ASSET_PATH: &str = "shaders/instancing.wgsl";
@@ -59,17 +59,27 @@ fn spawn(mut commands: Commands, mut meshes: ResMut<Assets<Mesh>>) {
     let mut instance_data = Vec::new();
 
     let (min, max) = min_max_norm(&velocity);
-    for (pos, vel) in cell_centres.iter().zip(velocity) {
+    for (pos, vel) in cell_centres.iter().zip(velocity.clone()) {
         let pos = Vec3::new(pos[0], pos[1], pos[2]);
         let vel = Vec3::new(vel[0], vel[1], vel[2]);
         let col = cool_warm_col_from_val(vel.norm(), min, max);
         instance_data.push(InstanceData {
             position: pos,
-            scale: 0.02,
+            scale: 0.001,
             color: LinearRgba::from_f32_array_no_alpha(col.into()).to_f32_array(),
         });
     }
 
+    let all_streamline_points = fan_streamline_points(&cell_centres, &velocity);
+
+    for pos in all_streamline_points.iter() {
+        let pos = Vec3::new(pos[0], pos[1], pos[2]);
+        instance_data.push(InstanceData {
+            position: pos,
+            scale: 0.002,
+            color: LinearRgba::from_f32_array_no_alpha([0.0, 255.0, 0.0].into()).to_f32_array(),
+        });
+    }
     commands.spawn((
         Mesh3d(meshes.add(Cuboid::new(1.0, 1.0, 1.0))),
         InstanceMaterialData(instance_data),
